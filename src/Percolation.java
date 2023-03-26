@@ -38,10 +38,7 @@ public class Percolation {
         if (row<=0||row> grid.length||col<=0||col> grid.length)
             throw new IllegalArgumentException
                     ("Row and column must be between 1 and size of the array");
-        if (grid[row][col]==1)
-        return true;
-        else
-            return false;
+        return grid[row][col] == 1;
     }
 
     // is the site (row, col) full?
@@ -49,15 +46,12 @@ public class Percolation {
         if (row<=0||row> grid.length||col<=0||col> grid.length)
             throw new IllegalArgumentException
                     ("Row and column must be between 1 and size of the array");
-        if (grid[row][col]==0)
-            return true;
-        else
-            return false;
+        return grid[row][col] == 0;
     }
 
     // returns the number of open sites
     public int numberOfOpenSites() {
-        return numberOfOpenSites();
+        return openSiteCount;
     }
 
     // does the system percolate?
