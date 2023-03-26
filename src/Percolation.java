@@ -29,6 +29,7 @@ public class Percolation {
             throw new IllegalArgumentException
                     ("Row and column must be between 1 and size of the array");
         grid[row][col]=1;
+        openSiteCount++;
 
     }
 
@@ -56,7 +57,7 @@ public class Percolation {
 
     // returns the number of open sites
     public int numberOfOpenSites() {
-        return 0;
+        return numberOfOpenSites();
     }
 
     // does the system percolate?
