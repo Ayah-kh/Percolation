@@ -25,28 +25,31 @@ public class Percolation {
 
     // opens the site (row, col) if it is not open already
     public void open(int row, int col) {
-        if (row<=0||row> grid.length||col<=0||col> grid.length)
+        if (row <= 0 || row > grid.length || col <= 0 || col > grid.length)
             throw new IllegalArgumentException
-                    ("Row and column must be between 1 and size of the array");
-        grid[row][col]=1;
+                    ("Row and column must be between 1 and " + grid.length);
+        if (row == 1)
+            grid[row - 1][col - 1] = 2;
+        else
+            grid[row - 1][col - 1] = 1;
         openSiteCount++;
 
     }
 
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
-        if (row<=0||row> grid.length||col<=0||col> grid.length)
+        if (row <= 0 || row > grid.length || col <= 0 || col > grid.length)
             throw new IllegalArgumentException
-                    ("Row and column must be between 1 and size of the array");
-        return grid[row][col] == 1;
+                    ("Row and column must be between 1 and " + grid.length);
+        return grid[row - 1][col - 1] == 1;
     }
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
-        if (row<=0||row> grid.length||col<=0||col> grid.length)
+        if (row <= 0 || row > grid.length || col <= 0 || col > grid.length)
             throw new IllegalArgumentException
-                    ("Row and column must be between 1 and size of the array");
-        return grid[row][col] == 0;
+                    ("Row and column must be between 1 and " + grid.length);
+        return grid[row - 1][col - 1] == 2;
     }
 
     // returns the number of open sites
@@ -59,7 +62,7 @@ public class Percolation {
         return false;
     }
 
-   //delete before submission
+    //delete before submission
     public void printArray() {
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid.length; j++) {
@@ -73,6 +76,18 @@ public class Percolation {
 
 
     public static void main(String[] args) {
+        Percolation percolation = new Percolation(5);
+        percolation.printArray();
+
+        percolation.open(1, 2);
+        percolation.open(3, 5);
+        percolation.open(5, 3);
+        percolation.open(4, 2);
+        percolation.open(3, 4);
+        percolation.open(2, 4);
+
+        System.out.println();
+        percolation.printArray();
 
     }
 }
