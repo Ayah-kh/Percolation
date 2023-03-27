@@ -2,18 +2,22 @@ import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
+import java.util.Random;
+
 // test client (optional)
 public class Percolation {
 
     private final int[][] grid;
+    private final WeightedQuickUnionUF set;
     private int openSiteCount;
 
 
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {
-
         if (n <= 0)
             throw new IllegalArgumentException("N must be bigger than 0");
+
+        set=new WeightedQuickUnionUF(n*n);
 
         grid = new int[n][n];
         for (int i = 0; i < n; i++) {
@@ -21,6 +25,7 @@ public class Percolation {
                 grid[i][j] = 0;
             }
         }
+        grid[0][0]=2;
     }
 
     // opens the site (row, col) if it is not open already
@@ -28,10 +33,13 @@ public class Percolation {
         if (row <= 0 || row > grid.length || col <= 0 || col > grid.length)
             throw new IllegalArgumentException
                     ("Row and column must be between 1 and " + grid.length);
-        if (row == 1)
+        if (row == 1) {
             grid[row - 1][col - 1] = 2;
+        }
+
         else
             grid[row - 1][col - 1] = 1;
+
         openSiteCount++;
 
     }
@@ -59,6 +67,15 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
+        int n = grid.length;
+
+        outerLoop:
+        for (int i=0;i<n;i++) {
+            for (int j = 0; i < n; j++)
+                if (set.find(0 * n + i) == set.find(4 * n + j))
+                    return true;
+                    break outerLoop;
+        }
         return false;
     }
 
@@ -76,15 +93,15 @@ public class Percolation {
 
 
     public static void main(String[] args) {
-        Percolation percolation = new Percolation(5);
+        int n = 7;
+
+        Percolation percolation = new Percolation(n);
         percolation.printArray();
 
-        percolation.open(1, 2);
-        percolation.open(3, 5);
-        percolation.open(5, 3);
-        percolation.open(4, 2);
-        percolation.open(3, 4);
-        percolation.open(2, 4);
+        Random random = new Random();
+
+        for (int i=0;i<40;i++)
+        percolation.open(random.nextInt(n) + 1,random.nextInt(n) + 1);
 
         System.out.println();
         percolation.printArray();
