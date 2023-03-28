@@ -35,30 +35,23 @@ public class Percolation {
             throw new IllegalArgumentException
                     ("Row and column must be between 1 and " + n);
 
-        if (!isOpen(row,col))
+        if (!isOpen(row, col))
             openSiteCount++;
-        
+
         grid[row - 1][col - 1] = 1;
 
-        if (isOpen(row - 1, col - 2))
-            set.union(
-                    flatIndex(row - 1, col - 2),
-                    flatIndex(row - 1, col - 1));
-        if (isOpen(row - 2, col - 1))
-            set.union(
-                    flatIndex(row - 2, col - 1),
-                    flatIndex(row - 1, col - 1));
-        if (isOpen(row - 1, col))
-            set.union(
-                    flatIndex(row - 1, col),
-                    flatIndex(row - 1, col - 1));
-        if (isOpen(row, col - 1))
-            set.union(
-                    flatIndex(row, col - 1),
-                    flatIndex(row - 1, col - 1));
+        unionTheOpen(row - 1, col - 2,row - 1, col - 1);
+        unionTheOpen(row - 1, col ,row - 1, col - 1);
+        unionTheOpen(row - 2, col - 2,row - 1, col - 1);
+        unionTheOpen(row , col - 2,row - 1, col - 1);
 
-        
+    }
 
+    private void unionTheOpen(int rowA, int colA, int rowB, int colB) {
+        if (isOpen(rowB, colB) && rowB >= 0 && rowB < n && colB >= 0 && colB < n)
+            set.union(
+                    flatIndex(colA, colB),
+                    flatIndex(rowB, colB));
     }
 
     // is the site (row, col) open?
@@ -84,15 +77,15 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        
-        boolean isPercolates= false;
+
+        boolean isPercolates = false;
 
 
         outerLoop:
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++)
                 if (set.find(i) == set.find(4 * n + j)) {
-                    isPercolates= true;
+                    isPercolates = true;
                     break outerLoop;
                 }
         }
