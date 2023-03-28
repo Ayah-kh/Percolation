@@ -146,8 +146,7 @@ public class Percolation {
         System.out.println("is it percolate? "+percolation.percolates());
         int openSiteCount1 = percolation.openSiteCount;
         System.out.println(openSiteCount1);
-        int n2=n*n;
-        double result= (double) openSiteCount1/(double) n2;
+        double result= (double) openSiteCount1/(double) (n*n);
         System.out.println(result);
 
 
