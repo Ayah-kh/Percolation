@@ -40,18 +40,21 @@ public class Percolation {
 
         grid[row - 1][col - 1] = 1;
 
-        unionTheOpen(row - 1, col - 2,row - 1, col - 1);
-        unionTheOpen(row - 1, col ,row - 1, col - 1);
-        unionTheOpen(row - 2, col - 2,row - 1, col - 1);
-        unionTheOpen(row , col - 2,row - 1, col - 1);
+        unionTheOpen(row, col, row, (col - 1));
+        unionTheOpen(row, col, row, (col + 1));
+        unionTheOpen(row, col, (row - 1), col);
+        unionTheOpen(row, col, (row + 1), col);
 
     }
 
     private void unionTheOpen(int rowA, int colA, int rowB, int colB) {
-        if (isOpen(rowB, colB) && rowB >= 0 && rowB < n && colB >= 0 && colB < n)
-            set.union(
-                    flatIndex(colA, colB),
-                    flatIndex(rowB, colB));
+        if (rowB > 0 && rowB <= n && colB > 0 && colB <= n) {
+            if (isOpen(rowB, colB)) {
+                set.union(
+                        flatIndex(rowA, colA),
+                        flatIndex(rowB, colB));
+            }
+        }
     }
 
     // is the site (row, col) open?
@@ -59,7 +62,7 @@ public class Percolation {
         if (row <= 0 || row > n || col <= 0 || col > n)
             throw new IllegalArgumentException
                     ("Row and column must be between 1 and " + n);
-        return grid[row - 1][col - 1] == 1;
+        return grid[(row - 1)][(col - 1)] == 1;
     }
 
     // is the site (row, col) full?
@@ -67,7 +70,16 @@ public class Percolation {
         if (row <= 0 || row > n || col <= 0 || col > n)
             throw new IllegalArgumentException
                     ("Row and column must be between 1 and " + n);
-        return grid[row - 1][col - 1] == 2;
+        boolean isItFull = false;
+
+        for (int i = 0; i < n; i++) {
+
+            if (set.find(i) == set.find(4 * (row-1) + (col-1))) {
+                isItFull = true;
+                break;
+            }
+        }
+        return isItFull;
     }
 
     // returns the number of open sites
@@ -103,20 +115,41 @@ public class Percolation {
     }
 
     private int flatIndex(int row, int col) {
-        return (row - 1) * n + (col - 1);
+        int index = (row - 1) * n + (col - 1);
+        return index;
     }
 
 
     public static void main(String[] args) {
-        int n = 7;
+        int n = 5;
 
         Percolation percolation = new Percolation(n);
         percolation.printArray();
 
+        int row = 0;
+        int col = 0;
+
         Random random = new Random();
 
-        for (int i = 0; i < 40; i++)
-            percolation.open(random.nextInt(n) + 1, random.nextInt(n) + 1);
+        for (int i = 0; i < 20; i++) {
+            row = random.nextInt(n) + 1;
+            col = random.nextInt(n) + 1;
+
+            System.out.println("row: " + row + ", col: " + col);
+            System.out.println("flat index: " + ((row - 1) * n + (col - 1)));
+
+            percolation.open(row, col);
+            System.out.println(percolation.isFull(row,col));
+            System.out.println("----------------");
+        }
+
+        System.out.println("is it percolate? "+percolation.percolates());
+        int openSiteCount1 = percolation.openSiteCount;
+        System.out.println(openSiteCount1);
+        int n2=n*n;
+        double result= (double) openSiteCount1/(double) n2;
+        System.out.println(result);
+
 
         System.out.println();
         percolation.printArray();
