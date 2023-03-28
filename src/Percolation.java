@@ -10,6 +10,7 @@ public class Percolation {
     private final int[][] grid;
     private final WeightedQuickUnionUF set;
     private int openSiteCount;
+    private final int n;
 
 
     // creates n-by-n grid, with all sites initially blocked
@@ -25,20 +26,19 @@ public class Percolation {
                 grid[i][j] = 0;
             }
         }
-        grid[0][0] = 2;
+        this.n = n;
     }
 
     // opens the site (row, col) if it is not open already
     public void open(int row, int col) {
-        if (row <= 0 || row > grid.length || col <= 0 || col > grid.length)
+        if (row <= 0 || row > n || col <= 0 || col > n)
             throw new IllegalArgumentException
-                    ("Row and column must be between 1 and " + grid.length);
+                    ("Row and column must be between 1 and " + n);
 
-        if (row == 1) {
-            grid[row - 1][col - 1] = 2;
-            set.union(flatIndex(row - 1, col - 1), 0);
-        } else
-            grid[row - 1][col - 1] = 1;
+        if (!isOpen(row,col))
+            openSiteCount++;
+        
+        grid[row - 1][col - 1] = 1;
 
         if (isOpen(row - 1, col - 2))
             set.union(
@@ -57,23 +57,23 @@ public class Percolation {
                     flatIndex(row, col - 1),
                     flatIndex(row - 1, col - 1));
 
-        openSiteCount++;
+        
 
     }
 
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
-        if (row <= 0 || row > grid.length || col <= 0 || col > grid.length)
+        if (row <= 0 || row > n || col <= 0 || col > n)
             throw new IllegalArgumentException
-                    ("Row and column must be between 1 and " + grid.length);
+                    ("Row and column must be between 1 and " + n);
         return grid[row - 1][col - 1] == 1;
     }
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
-        if (row <= 0 || row > grid.length || col <= 0 || col > grid.length)
+        if (row <= 0 || row > n || col <= 0 || col > n)
             throw new IllegalArgumentException
-                    ("Row and column must be between 1 and " + grid.length);
+                    ("Row and column must be between 1 and " + n);
         return grid[row - 1][col - 1] == 2;
     }
 
@@ -84,22 +84,25 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        int n = grid.length;
+        
+        boolean isPercolates= false;
+
 
         outerLoop:
         for (int i = 0; i < n; i++) {
-            for (int j = 0; i < n; j++)
-                if (set.find(0 * n + i) == set.find(4 * n + j))
-                    return true;
-            break outerLoop;
+            for (int j = 0; j < n; j++)
+                if (set.find(i) == set.find(4 * n + j)) {
+                    isPercolates= true;
+                    break outerLoop;
+                }
         }
-        return false;
+        return isPercolates;
     }
 
     //delete before submission
     public void printArray() {
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid.length; j++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
                 System.out.print(grid[i][j] + " ");
             }
             System.out.println();
@@ -107,7 +110,7 @@ public class Percolation {
     }
 
     private int flatIndex(int row, int col) {
-        return (row - 1) * grid.length + (col - 1);
+        return (row - 1) * n + (col - 1);
     }
 
 
