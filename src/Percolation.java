@@ -104,16 +104,6 @@ public class Percolation {
         return isPercolates;
     }
 
-    //delete before submission
-    public void printArray() {
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                System.out.print(grid[i][j] + " ");
-            }
-            System.out.println();
-        }
-    }
-
     private int flatIndex(int row, int col) {
         int index = (row - 1) * n + (col - 1);
         return index;
@@ -121,37 +111,7 @@ public class Percolation {
 
 
     public static void main(String[] args) {
-        int n = 100;
 
-        Percolation percolation = new Percolation(n);
-        percolation.printArray();
-
-        int row = 0;
-        int col = 0;
-
-        Random random = new Random();
-
-        for (int i = 0; i < 5600; i++) {
-            row = random.nextInt(n) + 1;
-            col = random.nextInt(n) + 1;
-
-            System.out.println("row: " + row + ", col: " + col);
-            System.out.println("flat index: " + ((row - 1) * n + (col - 1)));
-
-            percolation.open(row, col);
-            System.out.println(percolation.isFull(row,col));
-            System.out.println("----------------");
-        }
-
-        System.out.println("is it percolate? "+percolation.percolates());
-        int openSiteCount1 = percolation.openSiteCount;
-        System.out.println(openSiteCount1);
-        double result= (double) openSiteCount1/(double) (n*n);
-        System.out.println(result);
-
-
-        System.out.println();
-        percolation.printArray();
 
     }
 }
