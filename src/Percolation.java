@@ -1,16 +1,12 @@
-import edu.princeton.cs.algs4.StdRandom;
-import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
-
-import java.util.Random;
 
 // test client (optional)
 public class Percolation {
 
     private final int[][] grid;
     private final WeightedQuickUnionUF set;
-    private int openSiteCount;
     private final int n;
+    private int openSiteCount;
 
 
     // creates n-by-n grid, with all sites initially blocked
@@ -27,6 +23,11 @@ public class Percolation {
             }
         }
         this.n = n;
+    }
+
+    public static void main(String[] args) {
+
+
     }
 
     // opens the site (row, col) if it is not open already
@@ -74,7 +75,7 @@ public class Percolation {
 
         for (int i = 0; i < n; i++) {
 
-            if (set.find(i) == set.find(4 * (row-1) + (col-1))) {
+            if (set.find(i) == set.find(4 * (row - 1) + (col - 1))) {
                 isItFull = true;
                 break;
             }
@@ -107,11 +108,5 @@ public class Percolation {
     private int flatIndex(int row, int col) {
         int index = (row - 1) * n + (col - 1);
         return index;
-    }
-
-
-    public static void main(String[] args) {
-
-
     }
 }
