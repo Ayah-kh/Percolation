@@ -121,7 +121,7 @@ public class Percolation {
 
 
     public static void main(String[] args) {
-        int n = 5;
+        int n = 100;
 
         Percolation percolation = new Percolation(n);
         percolation.printArray();
@@ -131,7 +131,7 @@ public class Percolation {
 
         Random random = new Random();
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 5600; i++) {
             row = random.nextInt(n) + 1;
             col = random.nextInt(n) + 1;
 
