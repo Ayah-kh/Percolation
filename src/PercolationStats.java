@@ -3,6 +3,7 @@ import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
 
 public class PercolationStats {
+    private final double CONFIDENCE_95 = 1.96;
     // perform independent trials on an n-by-n grid
     private double[] fractionOfOpenSites;
 
@@ -54,11 +55,11 @@ public class PercolationStats {
 
     // low endpoint of 95% confidence interval
     public double confidenceLo() {
-        return mean() - 1.96 * stddev() / Math.sqrt(fractionOfOpenSites.length);
+        return mean() - CONFIDENCE_95 * stddev() / Math.sqrt(fractionOfOpenSites.length);
     }
 
     // high endpoint of 95% confidence interval
     public double confidenceHi() {
-        return mean() + 1.96 * stddev() / Math.sqrt(fractionOfOpenSites.length);
+        return mean() + CONFIDENCE_95 * stddev() / Math.sqrt(fractionOfOpenSites.length);
     }
 }

@@ -7,17 +7,17 @@ public class Percolation {
     private final WeightedQuickUnionUF set;
     private final int n;
     private int openSiteCount;
+    private int top = 0;
+    private int bottom;
 
 
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {
-        if (n <= 0)
-            throw new IllegalArgumentException("N must be bigger than 0");
-
-        set = new WeightedQuickUnionUF(n * n);
-
-        grid = new boolean[n][n];
+        if (n <= 0) throw new IllegalArgumentException("N must be bigger than 0");
         this.n = n;
+        bottom = n * n + 1;
+        grid = new boolean[n][n];
+        set = new WeightedQuickUnionUF(n * n + 2);
     }
 
     public static void main(String[] args) {
@@ -34,6 +34,12 @@ public class Percolation {
             openSiteCount++;
 
         grid[row - 1][col - 1] = true;
+
+        if (row == 1)
+            set.union(flatIndex(row, col), top);
+
+        if (row == n)
+            set.union(flatIndex(row, col), bottom);
 
 
         if (row > 1 && isOpen(row - 1, col)) {
@@ -63,16 +69,8 @@ public class Percolation {
     public boolean isFull(int row, int col) {
         if (row <= 0 || row > n || col <= 0 || col > n)
             throw new IllegalArgumentException("Row and column must be between 1 and " + n);
-        boolean isItFull = false;
 
-        for (int i = 0; i < n; i++) {
-
-            if (set.find(i) == set.find(4 * (row - 1) + (col - 1))) {
-                isItFull = true;
-                break;
-            }
-        }
-        return isItFull;
+        return set.find(flatIndex(row, col)) == set.find(top);
     }
 
     // returns the number of open sites
@@ -83,22 +81,11 @@ public class Percolation {
     // does the system percolate?
     public boolean percolates() {
 
-        boolean isPercolates = false;
-
-
-        outerLoop:
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++)
-                if (set.find(i) == set.find(4 * n + j)) {
-                    isPercolates = true;
-                    break outerLoop;
-                }
-        }
-        return isPercolates;
+        return set.find(top) == set.find(bottom);
     }
 
     private int flatIndex(int row, int col) {
-        int index = (row - 1) * n + (col - 1);
+        int index = (row - 1) * n + col;
         return index;
     }
 }
