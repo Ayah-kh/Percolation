@@ -3,7 +3,7 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 // test client (optional)
 public class Percolation {
 
-    private final int[][] grid;
+    private final boolean[][] grid;
     private final WeightedQuickUnionUF set;
     private final int n;
     private int openSiteCount;
@@ -16,12 +16,7 @@ public class Percolation {
 
         set = new WeightedQuickUnionUF(n * n);
 
-        grid = new int[n][n];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                grid[i][j] = 0;
-            }
-        }
+        grid = new boolean[n][n];
         this.n = n;
     }
 
@@ -33,44 +28,41 @@ public class Percolation {
     // opens the site (row, col) if it is not open already
     public void open(int row, int col) {
         if (row <= 0 || row > n || col <= 0 || col > n)
-            throw new IllegalArgumentException
-                    ("Row and column must be between 1 and " + n);
+            throw new IllegalArgumentException("Row and column must be between 1 and " + n);
 
         if (!isOpen(row, col))
             openSiteCount++;
 
-        grid[row - 1][col - 1] = 1;
+        grid[row - 1][col - 1] = true;
 
-        unionTheOpen(row, col, row, (col - 1));
-        unionTheOpen(row, col, row, (col + 1));
-        unionTheOpen(row, col, (row - 1), col);
-        unionTheOpen(row, col, (row + 1), col);
 
-    }
-
-    private void unionTheOpen(int rowA, int colA, int rowB, int colB) {
-        if (rowB > 0 && rowB <= n && colB > 0 && colB <= n) {
-            if (isOpen(rowB, colB)) {
-                set.union(
-                        flatIndex(rowA, colA),
-                        flatIndex(rowB, colB));
-            }
+        if (row > 1 && isOpen(row - 1, col)) {
+            set.union(flatIndex(row, col), flatIndex(row - 1, col));
         }
+        if (row < n && isOpen(row + 1, col)) {
+            set.union(flatIndex(row, col), flatIndex(row + 1, col));
+        }
+        if (col > 1 && isOpen(row, col - 1)) {
+            set.union(flatIndex(row, col), flatIndex(row, col - 1));
+        }
+        if (col < n && isOpen(row, col + 1)) {
+            set.union(flatIndex(row, col), flatIndex(row, col + 1));
+        }
+
     }
+
 
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
         if (row <= 0 || row > n || col <= 0 || col > n)
-            throw new IllegalArgumentException
-                    ("Row and column must be between 1 and " + n);
-        return grid[(row - 1)][(col - 1)] == 1;
+            throw new IllegalArgumentException("Row and column must be between 1 and " + n);
+        return grid[(row - 1)][(col - 1)];
     }
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
         if (row <= 0 || row > n || col <= 0 || col > n)
-            throw new IllegalArgumentException
-                    ("Row and column must be between 1 and " + n);
+            throw new IllegalArgumentException("Row and column must be between 1 and " + n);
         boolean isItFull = false;
 
         for (int i = 0; i < n; i++) {
